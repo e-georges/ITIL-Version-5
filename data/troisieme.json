@@ -1,0 +1,141 @@
+{
+  "matieres": [
+    {
+      "id": "itil_product",
+      "label": "ITIL 5 Product Management",
+      "emoji": "📦",
+      "couleur": "#1E3A8A",
+      "chapitres": [
+        {
+          "id": "product_lifecycle",
+          "titre": "Cycle de vie du Produit & Alignement Valeur",
+          "fiche": "Comprendre la transition d'une approche purement 'Service' vers une gestion de 'Produit IT'. Focus sur la définition d'un produit, l'ingénierie des exigences modernes, la boucle de feedback rapide (Lean/Agile) et l'orientation résultats (Outcomes) plutôt que livrables (Outputs).",
+          "conseil_strategique": "À l'examen ITIL 5, retenez que le 'Produit' est le véhicule principal de la valeur. Contrairement aux versions précédentes, le produit englobe les ressources, les technologies et les configurations matérielles sous une gouvernance unifiée.",
+          "quiz": [
+            {
+              "id": "itil5_p1",
+              "difficulte": 1,
+              "enonce": "Selon le référentiel ITIL 5, qu'est-ce qui différencie principalement un 'Produit' d'un 'Livrable' (Output) ?",
+              "options": [
+                "Le produit est uniquement matériel, tandis que le livrable est immatériel.",
+                "Le produit est un ensemble de ressources configurées pour co-créer de la valeur, visant un résultat (Outcome).",
+                "Le produit n'inclut jamais de support utilisateur dans sa définition.",
+                "Le produit est géré exclusivement par des équipes externes à la DSI."
+              ],
+              "bonne_reponse": 1,
+              "explication": "Dans ITIL 5, le Produit est le cœur de l'architecture : il orchestre les ressources pour générer des impacts métiers (Outcomes), et ne se limite pas à la simple production de livrables techniques.",
+              "annale": "Mock Officiel ITIL 5 Foundation"
+            },
+            {
+              "id": "itil5_p2",
+              "difficulte": 2,
+              "enonce": "Quelle approche ITIL 5 Product recommande-t-il pour concevoir un produit aligné sur la valeur ?",
+              "options": [
+                "Rédiger un cahier des charges figé de 300 pages avant tout développement.",
+                "Établir des boucles de feedback courtes basées sur le Product Backlog et la valeur perçue.",
+                "Sous-traiter l'intégralité de la gouvernance du produit à un éditeur tiers.",
+                "Se concentrer uniquement sur les indicateurs de performance serveurs (CPU/RAM)."
+              ],
+              "bonne_reponse": 1,
+              "explication": "L'ingénierie de produit dans ITIL 5 intègre nativement l'agilité : l'alignement de la valeur se fait par itérations et ajustements continus du carnet de produit (Backlog).",
+              "annale": "Spécimen Examen Axelos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "itil_service",
+      "label": "ITIL 5 Service Delivery",
+      "emoji": "⚡",
+      "couleur": "#06B6D4",
+      "chapitres": [
+        {
+          "id": "service_ecosystems",
+          "titre": "Écosystèmes Modernes & Résilience",
+          "fiche": "Architecture des services au sein d'écosystèmes complexes (Cloud hybride, Multi-fournisseurs, IA intégrée). Concepts clés : Résilience opérationnelle, automatisation outrancière (AIOps), et continuité adaptative des services en flux tendu.",
+          "conseil_strategique": "Si une question porte sur l'orchestration de plusieurs clouds ou l'intégration d'agents d'intelligence artificielle dans le support, l'angle d'attaque ITIL 5 est toujours la 'Résilience de l'Écosystème de Service'.",
+          "quiz": [
+            {
+              "id": "itil5_s1",
+              "difficulte": 1,
+              "enonce": "Dans ITIL 5, comment définit-on un écosystème de service résilient ?",
+              "options": [
+                "Un système qui ne subit jamais aucune panne ni aucune interruption.",
+                "Un écosystème capable d'anticiper, d'absorber et de s'adapter aux perturbations technologiques ou métiers.",
+                "Une infrastructure logicielle entièrement hébergée sur un serveur local unique.",
+                "Un contrat juridique qui pénalise financièrement les sous-traitants au moindre incident."
+              ],
+              "bonne_reponse": 1,
+              "explication": "La résilience moderne selon ITIL 5 n'est pas l'illusion du risque zéro, mais la capacité d'adaptation et de rebond d'un écosystème face à l'imprévu.",
+              "annale": "Concepts Clés ITIL 5"
+            },
+            {
+              "id": "itil5_s2",
+              "difficulte": 3,
+              "enonce": "Lors de l'intégration de composants d'AIOps (IA pour les opérations IT) dans la livraison de services, quelle est la priorité d'ITIL 5 Service ?",
+              "options": [
+                "Remplacer la totalité des experts humains par des algorithmes autonomes.",
+                "Garantir la traçabilité, l'explicabilité des décisions de l'IA et le maintien de la valeur de bout en bout.",
+                "Utiliser l'IA uniquement pour générer des rapports de statistiques mensuels.",
+                "Bloquer toute mise à jour du système pour ne pas perturber l'apprentissage de la machine."
+              ],
+              "bonne_reponse": 1,
+              "explication": "L'automatisation intelligente doit servir la valeur globale. ITIL 5 insiste sur la gouvernance algorithmique : l'IA doit rester explicable et alignée sur la continuité opérationnelle.",
+              "annale": "Niveau Avancé Foundation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "itil_experience",
+      "label": "ITIL 5 Experience (XLAs)",
+      "emoji": "🌟",
+      "couleur": "#10B981",
+      "chapitres": [
+        {
+          "id": "xla_framework",
+          "titre": "Du SLA au XLA (Experience Level Agreement)",
+          "fiche": "Analyse de l'expérience utilisateur (UX) et collaborateur (EX). Transition définitive des SLA traditionnels ('effet pastèque' : vert à l'extérieur, rouge à l'intérieur) vers les XLA (Experience Level Agreements). Concepts de conception centrée sur l'humain (Human-Centered Design) et de valeur émotionnelle du service.",
+          "conseil_strategique": "Retiens bien la métaphore de l'effet pastèque pour l'examen. Un SLA peut être techniquement validé (ex: réseau dispo à 99%), mais si l'expérience utilisateur est exécrable, le XLA est rouge. ITIL 5 privilégie le XLA.",
+          "quiz": [
+            {
+              "id": "itil5_e1",
+              "difficulte": 1,
+              "enonce": "Qu'est-ce qu'un XLA (Experience Level Agreement) par rapport à un SLA classique ?",
+              "options": [
+                "Un contrat exclusivement dédié aux performances de la bande passante.",
+                "Un engagement mesurant le sentiment, le niveau de satisfaction et l'impact réel du service sur l'expérience humaine.",
+                "Un outil de chiffrement des données de l'expérience utilisateur.",
+                "Une pénalité financière appliquée en cas de retard de livraison d'un PC."
+              ],
+              "bonne_reponse": 1,
+              "explication": "Le XLA dépasse les simples métriques techniques (SLA) pour capturer l'expérience vécue et le ressenti de l'utilisateur final vis-à-vis du produit ou du service informatique.",
+              "annale": "Focus Examen Expérience"
+            },
+            {
+              "id": "itil5_e2",
+              "difficulte": 2,
+              "enonce": "Pour éviter 'l'effet pastèque' dans la gestion des niveaux de services, que préconise le pilier ITIL 5 Experience ?",
+              "options": [
+                "Ne plus mesurer du tout les indicateurs techniques.",
+                "Masquer les pannes informatiques aux yeux des clients.",
+                "Corréler les performances systèmes brutes avec des enquêtes de satisfaction à chaud et des parcours utilisateurs.",
+                "Augmenter unilatéralement le prix des abonnements aux services."
+              ],
+              "bonne_reponse": 2,
+              "explication": "L'effet pastèque se combat en croisant la télémétrie technique avec la perception humaine (XLA). C'est la seule façon d'avoir un tableau de bord qui reflète la réalité de la valeur.",
+              "annale": "Cas pratique ITIL 5"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pieges_classiques": [
+    "Confondre un indicateur SLA (disponibilité technique d'un composant) avec un indicateur XLA (expérience globale ressentie par l'humain).",
+    "Penser qu'ITIL 5 rejette l'Agilité. Au contraire, le pilier ITIL Product fusionne les principes du Product Management Agile avec la gouvernance ITSM.",
+    "Croire qu'un Produit IT selon ITIL 5 n'est qu'un logiciel. Il inclut intrinsèquement l'infrastructure, la data, les compétences et les processus associés."
+  ]
+}
