@@ -1,10 +1,50 @@
-// --- APPLICATION DE RÉVISION ADAPTATIVE ITIL 4 ---
-import { 
-    updateNiveauAdaptatif, 
-    selectionnerQuestionsAdaptatives, 
-    getNiveauActuel, 
-    getMessageMotivation 
-} from './jsadaptive-engine.js'; // Le correctif est ici !
+// --- MOTEUR ADAPTATIF ITIL v4 ---
+const AdaptiveState = { chapters: {} };
 
-const AppState = {
-// ... (Laissez TOUT le reste de votre fichier app.js exactement comme vous me l'avez montré)
+function getOrCreateChapterState(chapitreId) {
+    if (!AdaptiveState.chapters[chapitreId]) {
+        AdaptiveState.chapters[chapitreId] = { niveau: 1, historiqueCorrect: [], historiqueIds: [] };
+    }
+    return AdaptiveState.chapters[chapitreId];
+}
+
+export function updateNiveauAdaptatif(chapitreId, isCorrect) {
+    const state = getOrCreateChapterState(chapitreId);
+    state.historiqueCorrect.push(isCorrect);
+    if (state.historiqueCorrect.length > 3) state.historiqueCorrect.shift();
+
+    let montee = false, descente = false;
+    if (state.historiqueCorrect.length === 3 && state.historiqueCorrect.every(res => res === true)) {
+        if (state.niveau < 3) { state.niveau++; state.historiqueCorrect = []; montee = true; }
+    }
+    const mauvaises = state.historiqueCorrect.filter(res => res === false).length;
+    if (mauvaises >= 2) {
+        if (state.niveau > 1) { state.niveau--; state.historiqueCorrect = []; descente = true; }
+    }
+    return { niveauActuel: state.niveau, montee, descente };
+}
+
+export function selectionnerQuestionsAdaptatives(toutesLesQuestions, chapitreId, limite = 5) {
+    const state = getOrCreateChapterState(chapitreId);
+    const niveauCible = state.niveau;
+    let questionsFiltrees = toutesLesQuestions.filter(q => (q.difficulte || 1) === niveauCible);
+    if (questionsFiltrees.length === 0) questionsFiltrees = toutesLesQuestions;
+
+    let questionsDisponibles = questionsFiltrees.filter(q => !state.historiqueIds.includes(q.id));
+    if (questionsDisponibles.length === 0) { state.historiqueIds = []; questionsDisponibles = questionsFiltrees; }
+
+    const selection = questionsDisponibles.sort(() => Math.random() - 0.5).slice(0, limite);
+    selection.forEach(q => { if (q.id) { state.historiqueIds.push(q.id); if (state.historiqueIds.length > 10) state.historiqueIds.shift(); } });
+    return selection;
+}
+
+export function getNiveauActuel(chapitreId) { return getOrCreateChapterState(chapitreId).niveau; }
+
+export function getMessageMotivation(niveau) {
+    const messages = {
+        1: "Fondations ITIL 🎯 Validation des définitions élémentaires...",
+        2: "Scénarios Pratiques 🚀 Analyse de cas et d'applications d'écosystèmes.",
+        3: "Niveau Examen Blanc 👑 Questions sémantiques officielles Axelos."
+    };
+    return messages[niveau] || "Préparation en cours...";
+}
