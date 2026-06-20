@@ -1,0 +1,121 @@
+-- ============================================================
+-- 0003 — PROVISIONNEMENT AUTOMATIQUE & SEED CURRICULUM
+-- ============================================================
+
+-- ---------- Fonction de provisionnement ----------
+-- À l'inscription d'un enfant, copie le squelette officiel (curriculum_*)
+-- dans ses propres "subjects"/"chapters", en content_tier = 'generic'.
+-- Le contenu devient 'authoritative' uniquement quand l'élève ajoute
+-- son propre cours (logique applicative, pas dans cette fonction).
+
+create or replace function provision_official_curriculum(p_child_id uuid)
+returns void
+language plpgsql
+security definer
+as $$
+declare
+  cs record;
+  new_subject_id uuid;
+begin
+  for cs in select * from curriculum_subjects where level = 'seconde_generale' loop
+    insert into subjects (child_id, curriculum_subject_id, name, color, is_official)
+    values (p_child_id, cs.id, cs.name, cs.color, true)
+    returning id into new_subject_id;
+
+    insert into chapters (subject_id, curriculum_chapter_id, title, order_index, source_type, content_tier)
+    select new_subject_id, cc.id, cc.title, cc.order_index, 'official', 'generic'
+    from curriculum_chapters cc
+    where cc.curriculum_subject_id = cs.id;
+  end loop;
+end;
+$$;
+
+-- ---------- Déclenchement automatique à la création d'un compte enfant ----------
+
+create or replace function trigger_provision_curriculum()
+returns trigger
+language plpgsql
+as $$
+begin
+  if new.role = 'child' then
+    perform provision_official_curriculum(new.id);
+  end if;
+  return new;
+end;
+$$;
+
+create trigger on_child_created
+  after insert on users
+  for each row execute function trigger_provision_curriculum();
+
+-- ============================================================
+-- SEED — Tronc commun Seconde générale
+-- ============================================================
+-- ⚠️ Liste de démarrage non exhaustive. À faire valider/compléter par
+-- rapport au programme officiel Eduscol avant mise en production —
+-- les titres ci-dessous sont indicatifs pour amorcer le développement.
+
+do $$
+declare
+  v_subject_id uuid;
+begin
+
+  -- Français
+  insert into curriculum_subjects (name, color) values ('Français', '#2563EB') returning id into v_subject_id;
+  insert into curriculum_chapters (curriculum_subject_id, title, order_index, generic_summary) values
+    (v_subject_id, 'La poésie du XIXe au XXIe siècle', 1, 'Étude du genre poétique : formes, figures de style et évolution depuis le romantisme.'),
+    (v_subject_id, 'Le roman et le récit du Moyen Âge au XXIe siècle', 2, 'Panorama des formes narratives et de leur évolution historique.'),
+    (v_subject_id, 'Théâtre, du XVIIe au XXIe siècle', 3, 'Les codes du genre théâtral et ses transformations.'),
+    (v_subject_id, 'La littérature d''idées du XVIe au XVIIIe siècle', 4, 'Textes argumentatifs et essais des Lumières et de la Renaissance.');
+
+  -- Mathématiques
+  insert into curriculum_subjects (name, color) values ('Mathématiques', '#22C55E') returning id into v_subject_id;
+  insert into curriculum_chapters (curriculum_subject_id, title, order_index, generic_summary) values
+    (v_subject_id, 'Nombres et calculs', 1, 'Ensembles de nombres, calcul littéral et résolution d''équations.'),
+    (v_subject_id, 'Fonctions', 2, 'Notion de fonction, variations, représentation graphique.'),
+    (v_subject_id, 'Géométrie plane et repérage', 3, 'Vecteurs, coordonnées et configurations géométriques.'),
+    (v_subject_id, 'Statistiques et probabilités', 4, 'Indicateurs statistiques, échantillonnage et probabilités élémentaires.');
+
+  -- Histoire-Géographie
+  insert into curriculum_subjects (name, color) values ('Histoire-Géographie', '#F59E0B') returning id into v_subject_id;
+  insert into curriculum_chapters (curriculum_subject_id, title, order_index, generic_summary) values
+    (v_subject_id, 'Le monde méditerranéen, Antiquité et Moyen Âge', 1, 'Civilisations méditerranéennes et leurs héritages.'),
+    (v_subject_id, 'Société, Église et pouvoir politique dans l''Occident féodal', 2, 'Organisation du pouvoir et de la société au Moyen Âge.'),
+    (v_subject_id, 'L''affirmation de l''État dans le royaume de France', 3, 'Construction de l''État moderne en France.'),
+    (v_subject_id, 'Les territoires ultramarins français', 4, 'Géographie des territoires français hors métropole.');
+
+  -- Physique-Chimie
+  insert into curriculum_subjects (name, color) values ('Physique-Chimie', '#EF4444') returning id into v_subject_id;
+  insert into curriculum_chapters (curriculum_subject_id, title, order_index, generic_summary) values
+    (v_subject_id, 'Constitution et transformations de la matière', 1, 'Structure de la matière et réactions chimiques.'),
+    (v_subject_id, 'Mouvement et interactions', 2, 'Description du mouvement et forces appliquées.'),
+    (v_subject_id, 'Ondes et signaux', 3, 'Propriétés des ondes mécaniques et lumineuses.'),
+    (v_subject_id, 'Énergie : conversions et transferts', 4, 'Formes d''énergie et leurs transformations.');
+
+  -- SVT
+  insert into curriculum_subjects (name, color) values ('SVT', '#10B981') returning id into v_subject_id;
+  insert into curriculum_chapters (curriculum_subject_id, title, order_index, generic_summary) values
+    (v_subject_id, 'La Terre, la vie et l''organisation du vivant', 1, 'Biodiversité et organisation des êtres vivants.'),
+    (v_subject_id, 'Les enjeux contemporains de la planète', 2, 'Ressources, climat et impact humain.'),
+    (v_subject_id, 'Le corps humain et la santé', 3, 'Fonctionnement du corps et grands équilibres physiologiques.');
+
+  -- Sciences Économiques et Sociales
+  insert into curriculum_subjects (name, color) values ('SES', '#8B5CF6') returning id into v_subject_id;
+  insert into curriculum_chapters (curriculum_subject_id, title, order_index, generic_summary) values
+    (v_subject_id, 'Comment un marché concurrentiel fonctionne-t-il ?', 1, 'Offre, demande et formation des prix.'),
+    (v_subject_id, 'Qui produit des richesses ?', 2, 'Acteurs économiques et création de valeur.'),
+    (v_subject_id, 'Comment les agents économiques se financent-ils ?', 3, 'Financement de l''économie et rôle des institutions.');
+
+  -- Anglais LVA
+  insert into curriculum_subjects (name, color) values ('Anglais', '#0EA5E9') returning id into v_subject_id;
+  insert into curriculum_chapters (curriculum_subject_id, title, order_index, generic_summary) values
+    (v_subject_id, 'Identities and exchanges', 1, 'Vocabulaire et structures autour de l''identité et des échanges culturels.'),
+    (v_subject_id, 'Space and exchange', 2, 'Mobilités, voyages et échanges internationaux.');
+
+  -- Espagnol LVB
+  insert into curriculum_subjects (name, color) values ('Espagnol', '#F97316') returning id into v_subject_id;
+  insert into curriculum_chapters (curriculum_subject_id, title, order_index, generic_summary) values
+    (v_subject_id, 'Identidades y diversidad cultural', 1, 'Vocabulario y estructuras sobre identidad cultural.'),
+    (v_subject_id, 'El medio ambiente', 2, 'Vocabulario relacionado con la ecología y el medio ambiente.');
+
+end $$;

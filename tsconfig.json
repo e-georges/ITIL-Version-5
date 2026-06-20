@@ -1,0 +1,7 @@
+# Supabase — récupère ces valeurs dans Project Settings > API
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# OpenAI — utilisé Phase 2 (pipeline IA fiches/quiz), pas encore nécessaire en Phase 1
+OPENAI_API_KEY=
